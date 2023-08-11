@@ -350,10 +350,13 @@ dependencies = [
 name = "comicTaurin"
 version = "0.0.0"
 dependencies = [
+ "base64 0.21.2",
+ "rand 0.8.5",
  "serde",
  "serde_json",
  "tauri",
  "tauri-build",
+ "walkdir",
 ]
 
 [[package]]

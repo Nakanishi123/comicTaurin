@@ -16,6 +16,12 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "fs": {
+        "all": true
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {
@@ -35,6 +41,7 @@
     },
     "windows": [
       {
+        "decorations": true,
         "fullscreen": false,
         "resizable": true,
         "title": "comicTaurin",
