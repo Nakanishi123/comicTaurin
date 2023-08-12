@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import sidenavinner from "./sidenavinner.vue";
 const sidebarWidth = ref(250);
 const isResizing = ref(false);
 const isHidden = ref(false);
@@ -45,17 +46,16 @@ const sidenavLeave = () => {
         }
     }, 1000);
 }
-
 const sidenavOn = () => {
     isHidden.value = false;
     isHiddenTimeout.value = false;
 }
-
 </script>
   
 <template>
     <div id="sidenav" :style="{ width: sidebarWidth + 'px' }" @mouseleave="sidenavLeave" @mousemove="sidenavOn"
         :hidden="isHidden">
+        <sidenavinner />
         <div id="splitter" @mousedown="startResize" :style="{ left: sidebarWidth + 'px' }"></div>
     </div>
 </template>
@@ -66,15 +66,14 @@ const sidenavOn = () => {
     left: 0;
     top: 0;
     height: 100%;
-    background-color: aqua;
 }
 
 #splitter {
     position: absolute;
     top: 0;
-    width: 4px;
+    width: 3px;
     height: 100%;
-    background-color: red;
+    background-color: var(--text-color);
     cursor: ew-resize;
 }
 </style>

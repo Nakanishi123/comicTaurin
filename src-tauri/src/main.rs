@@ -4,6 +4,7 @@
 use base64::{self, Engine};
 use rand;
 use rand::seq::SliceRandom;
+use serde::{Deserialize, Serialize};
 use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
@@ -70,9 +71,83 @@ fn get_randompic() -> String {
     return format!("data:image/{};base64,{}", ext, base64_content);
 }
 
+#[derive(Serialize, Deserialize)]
+struct PathInfo {
+    path: String,
+    name: String,
+    is_dir: bool,
+}
+
+#[tauri::command]
+fn get_children(dir_path_str: String) -> Vec<PathInfo> {
+    let dir_path = Path::new(&dir_path_str);
+    if !dir_path.is_dir() {
+        return Vec::new();
+    }
+
+    let mut children = Vec::new();
+    for entry in dir_path.read_dir().unwrap() {
+        if let Ok(entry) = entry {
+            let path = entry.path();
+            let is_dir = path.is_dir();
+            let path_info = PathInfo {
+                path: path.to_string_lossy().into_owned(),
+                name: path
+                    .file_name()
+                    .unwrap_or_default()
+                    .to_string_lossy()
+                    .into_owned(),
+                is_dir,
+            };
+            children.push(path_info);
+        }
+    }
+    children
+}
+
+#[tauri::command]
+fn get_parent(path_str: String) -> PathInfo {
+    let path = Path::new(&path_str);
+    if !path.exists() {
+        let path_info = PathInfo {
+            path: String::new(),
+            name: String::new(),
+            is_dir: false,
+        };
+        return path_info;
+    }
+    match path.parent() {
+        Some(parent) => {
+            let path_info = PathInfo {
+                path: parent.to_str().unwrap().to_string(),
+                name: parent
+                    .file_name()
+                    .unwrap_or_default()
+                    .to_str()
+                    .unwrap()
+                    .to_string(),
+                is_dir: true,
+            };
+            return path_info;
+        }
+        None => {
+            let path_info = PathInfo {
+                path: String::new(),
+                name: String::new(),
+                is_dir: false,
+            };
+            return path_info;
+        }
+    }
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_randompic])
+        .invoke_handler(tauri::generate_handler![
+            get_randompic,
+            get_children,
+            get_parent
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

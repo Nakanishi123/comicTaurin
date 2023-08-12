@@ -1,17 +1,25 @@
+:root {
+  --text-color: #e7e7e7; /* 通常のテキストのカラー */
+  --background-color: #242424; /* ページの背景カラー */
+  --background-color-light: #1c1c1c; /* ページの背景カラー */
+}
+
 body {
   margin: 0;
   user-select: none;
+  overflow:hidden;
 }
 
 #app {
+  font-family: sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #1C1C1C;
+  background-color: var(--background-color-light);
   background-image:
-      linear-gradient(45deg, #242424 25%, transparent 25%),
-      linear-gradient(-45deg, #242424 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, #242424 75%),
-      linear-gradient(-45deg, transparent 75%, #242424 75%);
+      linear-gradient(45deg, var(--background-color) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--background-color) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--background-color) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--background-color) 75%);
   background-size: 11px 11px;
   background-position: 0 0, 0 11px, 11px -11px, -11px 0;
   justify-content: center;
