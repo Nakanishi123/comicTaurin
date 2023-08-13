@@ -4,10 +4,12 @@ import { PathInfo } from "../components/rustStruct.ts"
 import { invoke } from "@tauri-apps/api/tauri";
 
 export const useNowPath = defineStore('nowPath', () => {
+    // パスの情報を保持する
     const nowPath = ref("");
     const childData = ref<Array<PathInfo>>([]);
+    const bookOpen = ref(false);
 
-    async function getChild() {
+    async function getChildren() {
         try {
             const response = await invoke("get_children", { dirPathStr: nowPath.value });
             childData.value = response as PathInfo[];
@@ -23,7 +25,15 @@ export const useNowPath = defineStore('nowPath', () => {
             if (path.is_dir) {
                 nowPath.value = path.path;
             } else {
-
+                console.log(path.path);
+                if (bookExts.includes(path.path.split('.').pop() as string)) {
+                    // 画像の場合
+                    invoke("read_zip_book", { bookPath: path.path, imageExts: imageExts }).then((response) => {
+                        console.log(response);
+                        nowPageNum.value = response as number;
+                    });
+                    bookOpen.value = true;
+                }
             }
         }
     }
@@ -36,8 +46,37 @@ export const useNowPath = defineStore('nowPath', () => {
     }
 
     watch(nowPath, () => {
-        getChild();
+        getChildren();
     });
 
-    return { nowPath, childData, selectPath, toParent };
+    // 本の情報
+    const imageExts = ["png", "jpg", "jpeg", "gif", "bmp", "webp", "avif"];
+    const bookExts = ["zip", "cbz"];
+    const nowPageNum = ref(0);
+    const nowPage = ref(1);
+    const nowPageImage = ref("");
+
+    async function getPage(pageNum: number) {
+        console.log("getPage:", pageNum);
+        invoke("get_page", { pageIndex: pageNum }).then((response) => {
+            nowPageImage.value = response as string;
+        });
+    }
+
+    function nextPage(): void {
+        if (nowPage.value < nowPageNum.value) {
+            nowPage.value += 1;
+        }
+    }
+
+    function prevPage(): void {
+        if (nowPage.value > 1) {
+            nowPage.value -= 1;
+        }
+    }
+    watch(nowPage, () => {
+        getPage(nowPage.value);
+    });
+
+    return { nowPath, childData, selectPath, toParent, nowPage, nowPageImage, nextPage, prevPage };
 });
