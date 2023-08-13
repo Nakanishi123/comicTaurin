@@ -28,7 +28,7 @@ export const useNowPath = defineStore('nowPath', () => {
                 console.log(path.path);
                 if (bookExts.includes(path.path.split('.').pop() as string)) {
                     // 画像の場合
-                    invoke("read_zip_book", { bookPath: path.path, imageExts: imageExts }).then((response) => {
+                    invoke("set_book", { pathStr: path.path }).then((response) => {
                         console.log(response);
                         nowPageNum.value = response as number;
                     });
