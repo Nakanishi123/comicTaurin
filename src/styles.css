@@ -1,5 +1,7 @@
 :root {
   --text-color: #e7e7e7; /* 通常のテキストのカラー */
+  --text-accent-color: #ff8282; /* 強調テキストのカラー */
+  --text-accent-color2: #ffb9b9; /* 強調テキストのカラー */
   --background-color: #242424; /* ページの背景カラー */
   --background-color-light: #1c1c1c; /* ページの背景カラー */
 }

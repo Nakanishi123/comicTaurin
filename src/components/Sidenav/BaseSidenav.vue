@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import sidenavinner from "./sidenavinner.vue";
+import SidenavContent from './SidenavContent.vue';
 const sidebarWidth = ref(250);
 const isResizing = ref(false);
 const isHidden = ref(false);
@@ -55,7 +55,7 @@ const sidenavOn = () => {
 <template>
     <div id="sidenav" :style="{ width: sidebarWidth + 'px' }" @mouseleave="sidenavLeave" @mousemove="sidenavOn"
         :hidden="isHidden">
-        <sidenavinner />
+        <SidenavContent />
         <div id="splitter" @mousedown="startResize" :style="{ left: sidebarWidth + 'px' }"></div>
     </div>
 </template>
