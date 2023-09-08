@@ -2,7 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use base64::{engine::general_purpose, Engine};
-use std::{fs::File, io::Read, path::Path, str::Bytes, string};
+use std::{fs::File, io::Read, path::Path};
 use zip::ZipArchive;
 
 static IMAGE_EXTS: [&str; 8] = [
